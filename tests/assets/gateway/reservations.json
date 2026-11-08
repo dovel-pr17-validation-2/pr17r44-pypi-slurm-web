@@ -1,0 +1,26 @@
+[
+  {
+    "accounts": "acoustic",
+    "end_time": {
+      "infinite": false,
+      "number": 1779649791,
+      "set": true
+    },
+    "flags": [
+      "IGNORE_JOBS",
+      "ANY_NODES",
+      "PART_NODES",
+      "SPEC_NODES",
+      "FLEX"
+    ],
+    "name": "training",
+    "node_count": 4,
+    "node_list": "cn[1-4]",
+    "start_time": {
+      "infinite": false,
+      "number": 1779563391,
+      "set": true
+    },
+    "users": "tkirby,tkirby"
+  }
+]

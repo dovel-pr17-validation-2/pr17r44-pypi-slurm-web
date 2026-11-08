@@ -1,0 +1,324 @@
+= Troubleshooting
+:slurm-api-version:
+
+This page contains troubleshooting tips to help find out the reason of issues.
+
+[#slurmrestd]
+== Slurmrestd
+
+Test Slurm `slurmrestd` API is properly responding on Unix socket with these
+commands:
+
+[tabs]
+======
+JWT auth on Unix socket::
++
+====
+When using `slurmrestd` JWT authentication on listening on Unix socket:
+
+[source,console,subs=attributes]
+----
+$ export $(scontrol token)
+$ curl --silent --header X-SLURM-USER-TOKEN:$SLURM_JWT --unix-socket /run/slurmrestd/slurmrestd.socket http://slurm/slurm/v{api_version}/diag | \
+  jq '.statistics | with_entries(select(.key | startswith("jobs")))'
+{
+  "jobs_submitted": 385,
+  "jobs_started": 407,
+  "jobs_completed": 411,
+  "jobs_canceled": 0,
+  "jobs_failed": 0,
+  "jobs_pending": 0,
+  "jobs_running": 0
+}
+----
+====
+
+JWT auth on TCP/IP socket::
++
+====
+When using `slurmrestd` JWT authentication on listening on TCP/IP socket:
+
+[source,console,subs=attributes]
+----
+$ export $(scontrol token)
+$ curl --silent --header X-SLURM-USER-TOKEN:$SLURM_JWT http://localhost:6820/slurm/v{api_version}/diag | \
+  jq '.statistics | with_entries(select(.key | startswith("jobs")))'
+{
+  "jobs_submitted": 385,
+  "jobs_started": 407,
+  "jobs_completed": 411,
+  "jobs_canceled": 0,
+  "jobs_failed": 0,
+  "jobs_pending": 0,
+  "jobs_running": 0
+}
+----
+====
+
+local auth::
++
+====
+When using `slurmrestd` local authentication _(deprecated_):
+
+[source,console,subs=attributes]
+----
+$ curl --silent --unix-socket /run/slurmrestd/slurmrestd.socket http://slurm/slurm/v{api_version}/diag | \
+  jq '.statistics | with_entries(select(.key | startswith("jobs")))'
+{
+  "jobs_submitted": 385,
+  "jobs_started": 407,
+  "jobs_completed": 411,
+  "jobs_canceled": 0,
+  "jobs_failed": 0,
+  "jobs_pending": 0,
+  "jobs_running": 0
+}
+----
+====
+======
+
+This command should print JSON output with current jobs statistics on the
+cluster.
+
+Test Slurm accounting on in REST API with this command:
+
+[tabs]
+======
+JWT auth on Unix socket::
++
+====
+When using `slurmrestd` JWT authentication on listening on Unix socket:
+
+[source,console,subs=attributes]
+----
+$ curl --silent --header X-SLURM-USER-TOKEN:$SLURM_JWT --unix-socket /run/slurmrestd/slurmrestd.socket http://slurm/slurmdb/v{api_version}/config | \
+  jq .clusters[].nodes
+"cn[1-4]"
+----
+====
+
+JWT auth on TCP/IP socket::
++
+====
+When using `slurmrestd` JWT authentication on listening on TCP/IP socket:
+
+[source,console,subs=attributes]
+----
+$ curl --silent --header X-SLURM-USER-TOKEN:$SLURM_JWT http://localhost:6820/slurmdb/v{api_version}/config | \
+  jq .clusters[].nodes
+"cn[1-4]"
+----
+====
+
+local auth::
++
+====
+When using `slurmrestd` local authentication _(deprecated_):
+
+[source,console,subs=attributes]
+----
+$ curl --silent --unix-socket /run/slurmrestd/slurmrestd.socket http://slurm/slurmdb/v{api_version}/config | \
+  jq .clusters[].nodes
+"cn[1-4]"
+----
+====
+======
+
+This command should print the set of compute nodes in the cluster.
+
+Logs of `slurmrestd` are available with this command:
+
+[source,console]
+----
+# journalctl --unit slurmrestd.service
+----
+
+Informational and debug messages can be filtered out to see only the errors with
+this command:
+
+[source,console]
+----
+# journalctl --priority=notice --unit slurmrestd.service
+----
+
+[#native]
+== Native Services
+
+This section provides instructions to troubleshoot Slurm-web when running with
+_native services_ (ie. `slurm-web-gateway.service` and
+`slurm-web-agent.service`).
+
+Test Slurm-web gateway API is available with this command:
+
+[source,console,subs=attributes]
+----
+$ curl http://localhost:5012/api/version
+Slurm-web gateway v{version}
+----
+
+Test Slurm-web agent API is available with this command:
+
+[source,console,subs=attributes]
+----
+$ curl http://localhost:5013/version
+Slurm-web agent v{version}
+----
+
+Logs of native services are available with these commands:
+
+[source,console]
+----
+# journalctl --unit slurm-web-agent.service
+# journalctl --unit slurm-web-gateway.service
+----
+
+[#wsgi]
+== WSGI Services
+
+This section provides instructions to troubleshoot Slurm-web when running as
+WSGI applications on xref:conf:wsgi/index.adoc[production HTTP servers].
+
+Test Slurm-web gateway API is available with this command:
+
+[source,console,subs=attributes]
+----
+$ curl http://localhost/api/version
+Slurm-web gateway v{version}
+----
+
+Test Slurm-web agent API is available with this command:
+
+[source,console,subs=attributes]
+----
+$ curl http://localhost/agent/version
+Slurm-web agent v{version}
+----
+
+Logs of uWSGI services are available with these commands:
+
+[source,console]
+----
+# journalctl --unit slurm-web-agent-uwsgi.service
+# journalctl --unit slurm-web-gateway-uwsgi.service
+----
+
+Check for possible errors logs of HTTP servers:
+
+Nginx:: In file [.path]#`/var/log/nginx/error.log`#
+
+Apache2::
+
+* On Debian/Ubuntu: In file [.path]#`/var/log/apache2/error.log`#
+* On RHEL (and compatible) and Fedora: [.path]#`/var/log/httpd/error_log`#
+
+Caddy:: Run this command:
++
+[source,console]
+----
+# journalctl --unit caddy.service
+----
+
+[#containers]
+== Containers
+
+This section provides instructions to troubleshoot Slurm-web when running with
+OCI containers or the reference Compose stack.
+
+The following commands assume the default ports published by the container
+quickstarts: TCP/5011 for the gateway and TCP/5012 for the agent.
+
+Test Slurm-web gateway API is available with this command:
+
+[source,console,subs=attributes]
+----
+$ curl http://localhost:5011/api/version
+Slurm-web gateway v{version}
+----
+
+Test Slurm-web agent API is available with this command:
+
+[source,console,subs=attributes]
+----
+$ curl http://localhost:5012/version
+Slurm-web agent v{version}
+----
+
+Slurm-web container images run Gunicorn with access and error logs written to
+standard output and standard error. Container runtime logs therefore include
+HTTP access logs and application errors.
+
+[tabs]
+======
+Docker::
++
+====
+[source,console]
+----
+$ docker logs slurm-web-gateway
+$ docker logs slurm-web-agent
+----
+====
+
+Podman::
++
+====
+[source,console]
+----
+$ podman logs slurm-web-gateway
+$ podman logs slurm-web-agent
+----
+====
+
+Docker Compose::
++
+====
+[source,console]
+----
+$ docker compose logs gateway agent
+----
+====
+
+Podman Compose::
++
+====
+[source,console]
+----
+$ podman compose logs gateway agent
+----
+====
+======
+
+Use the `-f` option to follow logs in real time, for example:
+
+[source,console]
+----
+$ docker logs -f slurm-web-gateway
+$ docker compose logs -f gateway agent
+----
+
+[#authentication]
+== Authentication
+
+When users cannot sign in through the gateway, see the dedicated troubleshooting
+guides for each authentication method:
+
+* xref:conf:auth/ldap.adoc#troubleshooting[LDAP]
+* xref:conf:auth/oidc.adoc#troubleshooting[OIDC]
+
+== Authorization Policy
+
+To help understand roles and permissions granted by
+xref:conf:policy.adoc[authorization policy] on clusters, users can go in
+menu:Settings[Account] to view their permissions on clusters. For example:
+
+image::screenshot_perms.png[]
+
+In this example, the user _cingram_ is member of _users_ and _biology_ groups
+in LDAP directory.
+
+On cluster _emulator_, he is assigned roles _special_ and _user_ with
+permissions on `jobs-view`, `qos-view` and `stats-view` actions.
+
+On cluster _tiny_, he is assigned roles _admin_ and _users_ with permissions on
+`accounts-view`, `jobs-view`, `nodes-view`, `partitions-view`, `qos-view`,
+`reservations-view` and `stats-view` actions.

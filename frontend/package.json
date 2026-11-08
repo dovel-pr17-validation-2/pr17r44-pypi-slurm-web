@@ -1,0 +1,63 @@
+{
+  "name": "slurm-web-frontend",
+  "version": "7.0.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=20.19.0"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "run-p type-check build-only",
+    "preview": "vite preview",
+    "test:unit": "vitest",
+    "build-only": "vite build",
+    "type-check": "vue-tsc --noEmit -p tsconfig.app.json --composite false",
+    "lint": "eslint . --fix",
+    "format": "prettier --write src/ tests/"
+  },
+  "dependencies": {
+    "@headlessui/vue": "^1.7.23",
+    "@heroicons/vue": "^2.2.0",
+    "@microsoft/fetch-event-source": "^2.0.1",
+    "axios": "^1.20.0",
+    "chart.js": "^4.4.6",
+    "chartjs-adapter-luxon": "^1.3.1",
+    "luxon": "^3.5.0",
+    "pinia": "^3.0.4",
+    "vue": "^3.5.35",
+    "vue-router": "^5.0.7"
+  },
+  "devDependencies": {
+    "@pinia/testing": "^1.0.3",
+    "@tailwindcss/forms": "^0.5.10",
+    "@tailwindcss/vite": "^4.3.0",
+    "@tsconfig/node20": "^20.1.4",
+    "@types/luxon": "^3.4.2",
+    "@types/node": "^20.19.0",
+    "@vitejs/plugin-vue": "^6.0.7",
+    "@vitest/eslint-plugin": "^1.1.39",
+    "@vue/eslint-config-prettier": "^10.2.0",
+    "@vue/eslint-config-typescript": "^14.7.0",
+    "@vue/test-utils": "^2.4.10",
+    "@vue/tsconfig": "^0.9.1",
+    "eslint": "^10.4.0",
+    "eslint-plugin-vue": "^10.9.1",
+    "jest-canvas-mock": "^2.5.2",
+    "jsdom": "^29.1.1",
+    "npm-run-all": "^4.1.5",
+    "postcss": "^8.5.23",
+    "prettier": "^3.0.0",
+    "prettier-plugin-tailwindcss": "^0.8.0",
+    "tailwindcss": "^4.3.0",
+    "typescript": "^6.0.3",
+    "vite": "^8.3.5",
+    "vitest": "^4.1.11",
+    "vue-router-mock": "^2.0.2",
+    "vue-tsc": "^3.3.2"
+  },
+  "//overrides": "Force glob ^13: js-beautify (via @vue/test-utils) still depends on deprecated glob 10.x, which triggers npm deprecation warnings in CI. Remove this block when js-beautify ships glob >=13.",
+  "overrides": {
+    "glob": "^13.0.0"
+  }
+}

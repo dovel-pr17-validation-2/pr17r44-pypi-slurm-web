@@ -1,0 +1,9 @@
+= Docker
+:runtime-name: Docker
+:runtime-cmd: docker
+:compose-title: Docker Compose
+:compose-cmd: docker compose
+
+image:https://rackslab.io/images/distribs/docker.png[Docker,float=right]
+
+include::partial$install/containers-runtime.adoc[]

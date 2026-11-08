@@ -1,0 +1,14 @@
+{
+  "cache": true,
+  "cluster": "nova",
+  "metrics": true,
+  "racksdb": {
+    "enabled": true,
+    "infrastructure": "nova",
+    "version": "0.7.0"
+  },
+  "slurmdbd": {
+    "jobs_max_hours": 168
+  },
+  "version": "7.0.0"
+}

@@ -1,0 +1,9 @@
+= Podman
+:runtime-name: Podman
+:runtime-cmd: podman
+:compose-title: Podman Compose
+:compose-cmd: podman compose
+
+image:https://rackslab.io/images/distribs/podman.png[Podman,float=right]
+
+include::partial$install/containers-runtime.adoc[]

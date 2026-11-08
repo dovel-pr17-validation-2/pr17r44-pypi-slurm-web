@@ -1,0 +1,3 @@
+Upon successful test, restart agent service to apply changes:
+
+include::partial$restart/agent.adoc[]

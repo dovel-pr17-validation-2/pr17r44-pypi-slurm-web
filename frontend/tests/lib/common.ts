@@ -1,0 +1,68 @@
+import { ref } from 'vue'
+import type { Ref } from 'vue'
+import { vi } from 'vitest'
+import { runtimeConfiguration } from '@/plugins/runtimeConfiguration'
+import type { RuntimeConfiguration } from '@/plugins/runtimeConfiguration'
+import { httpPlugin } from '@/plugins/http'
+import { createTestingPinia } from '@pinia/testing'
+import { config, RouterLinkStub } from '@vue/test-utils'
+import { createRouterMock, injectRouterMock } from 'vue-router-mock'
+import type { RouterMock } from 'vue-router-mock'
+import { type GatewayAnyClusterApiKey } from '@/composables/GatewayAPI'
+
+const defaultRuntimeConfiguration: RuntimeConfiguration = {
+  api_server: 'http://localhost',
+  authentication: true,
+  authentication_method: 'ldap',
+  racksdb_rows_labels: false,
+  racksdb_racks_labels: false,
+  version: '0.0.0',
+  colors: undefined,
+  logo: undefined
+}
+
+export function init_plugins(
+  runtimeConfigurationOverrides: Partial<RuntimeConfiguration> = {}
+): RouterMock {
+  config.global.plugins = [
+    [runtimeConfiguration, { ...defaultRuntimeConfiguration, ...runtimeConfigurationOverrides }],
+    httpPlugin,
+    createTestingPinia({
+      createSpy: vi.fn,
+      stubActions: false
+    })
+  ]
+  config.global.stubs = {
+    RouterLink: RouterLinkStub
+  }
+
+  const router = createRouterMock({
+    spy: {
+      create: (fn: (...args: unknown[]) => unknown) => vi.fn(fn),
+      reset: (spy: { mockRestore: () => void }) => spy.mockRestore()
+    }
+  })
+
+  router.reset()
+  injectRouterMock(router)
+
+  return router
+}
+
+interface MockClusterDataPoller<ResultType> {
+  data: Ref<ResultType | undefined>
+  unable: Ref<boolean>
+  loaded: Ref<boolean>
+  setCallback: (newCallback: GatewayAnyClusterApiKey) => void
+  setParam: (newOtherParam: string | number) => void
+}
+
+export function getMockClusterDataPoller<ResultType>(): MockClusterDataPoller<ResultType> {
+  return {
+    data: ref(undefined),
+    unable: ref(false),
+    loaded: ref(true),
+    setCallback: vi.fn(),
+    setParam: vi.fn()
+  }
+}

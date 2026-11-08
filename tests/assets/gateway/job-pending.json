@@ -1,0 +1,183 @@
+{
+  "accrue_time": {
+    "infinite": false,
+    "number": 1780140255,
+    "set": true
+  },
+  "association": {
+    "account": "",
+    "cluster": "hpc",
+    "id": 10,
+    "partition": "",
+    "user": ""
+  },
+  "batch_flag": true,
+  "command": "",
+  "comment": {
+    "administrator": "",
+    "job": "",
+    "system": ""
+  },
+  "cpus": {
+    "infinite": false,
+    "number": 128,
+    "set": true
+  },
+  "current_working_directory": "/home/rpowers",
+  "derived_exit_code": {
+    "return_code": {
+      "infinite": false,
+      "number": 0,
+      "set": true
+    },
+    "signal": {
+      "id": {
+        "infinite": false,
+        "number": 0,
+        "set": false
+      },
+      "name": ""
+    },
+    "status": [
+      "SUCCESS"
+    ]
+  },
+  "exit_code": {
+    "return_code": {
+      "infinite": false,
+      "number": 0,
+      "set": true
+    },
+    "signal": {
+      "id": {
+        "infinite": false,
+        "number": 0,
+        "set": false
+      },
+      "name": ""
+    },
+    "status": [
+      "SUCCESS"
+    ]
+  },
+  "gres_detail": [],
+  "group": "slurm",
+  "last_sched_evaluation": {
+    "infinite": false,
+    "number": 1780140316,
+    "set": true
+  },
+  "name": "allocation",
+  "node_count": {
+    "infinite": false,
+    "number": 4,
+    "set": true
+  },
+  "nodes": "None assigned",
+  "partition": "gpu",
+  "priority": {
+    "infinite": false,
+    "number": 636,
+    "set": true
+  },
+  "qos": "normal",
+  "script": "",
+  "shared": [],
+  "sockets_per_node": {
+    "infinite": false,
+    "number": 0,
+    "set": false
+  },
+  "state": {
+    "current": [
+      "PENDING"
+    ],
+    "reason": "None"
+  },
+  "stderr_expanded": "",
+  "stdin_expanded": "",
+  "stdout_expanded": "/home/rpowers/slurm-5528.out",
+  "steps": [],
+  "submit_line": "",
+  "tasks": {
+    "infinite": false,
+    "number": 128,
+    "set": true
+  },
+  "time": {
+    "elapsed": 0,
+    "eligible": 1780140255,
+    "end": 0,
+    "limit": {
+      "infinite": false,
+      "number": 2,
+      "set": true
+    },
+    "planned": {
+      "infinite": false,
+      "number": 70,
+      "set": true
+    },
+    "start": 0,
+    "submission": 1780140255,
+    "suspended": 0,
+    "system": {
+      "microseconds": 0,
+      "seconds": 0
+    },
+    "total": {
+      "microseconds": 0,
+      "seconds": 0
+    },
+    "user": {
+      "microseconds": 0,
+      "seconds": 0
+    }
+  },
+  "tres": {
+    "allocated": [],
+    "requested": [
+      {
+        "count": 128,
+        "id": 1,
+        "name": "",
+        "type": "cpu"
+      },
+      {
+        "count": 65536,
+        "id": 2,
+        "name": "",
+        "type": "mem"
+      },
+      {
+        "count": 1,
+        "id": 4,
+        "name": "",
+        "type": "node"
+      },
+      {
+        "count": 128,
+        "id": 5,
+        "name": "",
+        "type": "billing"
+      },
+      {
+        "count": 2,
+        "id": 1001,
+        "name": "gpu",
+        "type": "gres"
+      }
+    ]
+  },
+  "tres_per_job": "gres/gpu:2",
+  "tres_per_node": "",
+  "tres_per_socket": "",
+  "tres_per_task": "",
+  "tres_req_str": "cpu=128,mem=64G,node=1,billing=128,gres/gpu=2",
+  "user": "rpowers",
+  "wckey": {
+    "flags": [],
+    "wckey": ""
+  },
+  "working_directory": "/home/rpowers"
+}
